@@ -1,0 +1,56 @@
+*{
+	margin: 0;
+}
+
+body{
+	font-family: Arial ;
+}
+
+footer{
+	width: 100px;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	padding: 40px 0;
+	color: grey;
+}
+
+.infinity-slider-wrap{
+	border: 1px solid black;
+	width: 350px;
+	height: 600px;
+	margin: 50px auto;
+	 position: relative; /*relative - элемент позиционируется как static но можно двигать его относительно своего положения */
+}
+
+.infinity-slider{
+	width: 350px;
+	height: 600px;
+	overflow: hidden; /*скрывает выходящий за пределы контент*/
+	position: relative; /*relative - элемент позиционируется как static но можно двигать его относительно своего положения */
+}
+
+.infinity-slider img{
+	max-width: 350px;
+	max-height: 600px;
+	position: absolute; /*absolute - элемент позиционируется относительно ближайшего родителя с relative, absolute, fixed и sticky*/
+	opacity: 1;
+	transition: all ease 1s;
+}
+
+.infinity-slider .opacity0{ /*Значение 0 делает элемент полностью прозрачным. Значения между 0 и 1 делают элемент полупрозрачным. */
+	opacity: 0;
+}
+
+.btn-infinity-up,  .btn-infinity-down{
+	width: 36px;
+	height: 36px;
+	background: url('../img/up.png');
+	/* background: url('down.png'); */
+	background-size: contain;
+}
+
+.btn-infinity-down{
+	background: url('../img/down.png');	
+	background-size: contain;
+}
