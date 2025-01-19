@@ -134,5 +134,12 @@ container.addEventListener("touchend", (event) => {
 	}
 });
 
+// Блокировка обновления страницы свайпом вниз
+window.addEventListener("touchmove", (event) => {
+	if (event.touches[0].clientY > startY) {
+		event.preventDefault(); // Предотвращаем стандартное поведение
+	}
+}, { passive: false });
+
 // Initialize
 loadCurrentImage(); // Загружаем первое изображение при старте
