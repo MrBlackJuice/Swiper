@@ -31,26 +31,18 @@ async function imageExists(url) {
 
 async function loadCurrentImage() {
 	if (currentImageIndex < images.length) { // Проверяем, есть ли еще изображения
-		container.style.backgroundImage = `url(${images[currentImageIndex].src})`; // Устанавливаем изображение в качестве фона контейнера
-		container.setAttribute("data-comment", images[currentImageIndex].comment); // Устанавливаем комментарий как атрибут контейнера
-		let commentElement = document.querySelector("#image-comment"); // Элемент для отображения комментария
+		const currentImage = images[currentImageIndex];
 
-		if (!commentElement) {
-			commentElement = document.createElement("div"); // Создаем элемент для комментария
-			commentElement.id = "image-comment"; // Устанавливаем ID элемента
-			const inputElement = document.createElement("input"); // Создаем поле ввода
-			inputElement.type = "text"; // Устанавливаем тип поля
-			inputElement.value = images[currentImageIndex].comment; // Устанавливаем текст комментария
-			inputElement.addEventListener("input", (e) => {
-				images[currentImageIndex].comment = e.target.value; // Обновляем комментарий в массиве
-				saveCommentsToStorage(); // Сохраняем изменения в локальное хранилище
-			});
-			commentElement.appendChild(inputElement); // Добавляем поле ввода в элемент комментария
-			container.parentNode.insertBefore(commentElement, container.nextSibling); // Добавляем элемент под контейнером
-		} else {
-			const inputElement = commentElement.querySelector("input");
-			inputElement.value = images[currentImageIndex].comment; // Обновляем текст поля ввода
-		}
+		const imgElement = new Image(); // Создаем объект Image для предварительной загрузки
+		imgElement.onload = () => {
+			container.style.backgroundImage = `url(${currentImage.src})`; // Устанавливаем изображение в качестве фона контейнера
+			container.style.backgroundSize = "contain"; // Масштабируем изображение под размер экрана
+			container.style.backgroundRepeat = "no-repeat"; // Отключаем повторение изображения
+			container.style.backgroundPosition = "center"; // Размещаем изображение по центру контейнера
+			container.setAttribute("data-comment", currentImage.comment); // Устанавливаем комментарий как атрибут контейнера
+			updateCommentInput(); // Обновляем или создаем поле ввода для комментария
+		};
+		imgElement.src = currentImage.src; // Устанавливаем путь к изображению для загрузки
 
 		document.querySelector("#toggle-comment").textContent = commentVisible ? "Скрыть комментарий" : "Показать комментарий";
 		document.querySelector("#image-comment").style.display = commentVisible ? "block" : "none"; // Управляем видимостью комментария
@@ -58,6 +50,26 @@ async function loadCurrentImage() {
 		container.innerHTML = "<h2>Игра окончена</h2><button id='restart-button'>Играть заново</button>"; // Выводим сообщение, если изображения закончились
 		document.querySelector("#restart-button").addEventListener("click", restartGame); // Добавляем обработчик для кнопки "Играть заново"
 	}
+}
+
+function updateCommentInput() {
+	let commentElement = document.querySelector("#image-comment"); // Элемент для отображения комментария
+
+	if (!commentElement) {
+		commentElement = document.createElement("div"); // Создаем элемент для комментария
+		commentElement.id = "image-comment"; // Устанавливаем ID элемента
+		const inputElement = document.createElement("input"); // Создаем поле ввода
+		inputElement.type = "text"; // Устанавливаем тип поля
+		inputElement.addEventListener("input", (e) => {
+			images[currentImageIndex].comment = e.target.value; // Обновляем комментарий в массиве
+			saveCommentsToStorage(); // Сохраняем изменения в локальное хранилище
+		});
+		commentElement.appendChild(inputElement); // Добавляем поле ввода в элемент комментария
+		container.parentNode.insertBefore(commentElement, container.nextSibling); // Добавляем элемент под контейнером
+	}
+
+	const inputElement = commentElement.querySelector("input");
+	inputElement.value = images[currentImageIndex].comment; // Обновляем текст поля ввода
 }
 
 function toggleCommentVisibility() {
